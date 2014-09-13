@@ -32,7 +32,7 @@ func main() {
 
 	var tileRange = image.Rectangle{
 		Min: image.Point{X: 655, Y: 1581},
-		Max: image.Point{X: 675, Y: 1591},
+		Max: image.Point{X: 660, Y: 1591},
 	}
 	m, err := traverseTiles(tileRange)
 	if err != nil {
@@ -40,6 +40,4 @@ func main() {
 		return
 	}
 	png.Encode(res, m)
-	// blue := color.RGBA{0, 100, 100, 100}
-	// draw.Draw(m, m.Bounds(), &image.Uniform{blue}, image.ZP, draw.Src)
 }
