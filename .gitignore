@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 keys.py
 result.png
+results/
 
 # C extensions
 *.so
