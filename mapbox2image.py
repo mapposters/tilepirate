@@ -1,24 +1,35 @@
 import requests
+import json
 from keys import parameters
+import os.path
 
-URL_ENDPOINT = "https://a.tiles.mapbox.com/v4/{mapid}/12/{x}/{y}@2x.png?access_token={access_token}"
-TILE_FILENAME_FORMAT = "tile_{x}_{y}.png"
+URL_ENDPOINT = "https://a.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}@2x.png?access_token={access_token}"
+TILE_FILENAME_FORMAT = "tile{z}_{x}x{y}.png"
 TILE_FILENAME_DIR = "output"
 
 
-def save_tile(x,y):
+def save_tile(x,y, z):
     parameters["x"] = x
     parameters["y"] = y
+    parameters["z"] = z
+    tile_filename = TILE_FILENAME_DIR + "/" + TILE_FILENAME_FORMAT.format(**parameters)
+    if os.path.isfile(tile_filename):
+      print "--- tile for %s seems to exist " % tile_filename
+      return
     r = requests.get(URL_ENDPOINT.format(**parameters))
     if r.status_code != 200:
         print 'Error accessing {} ...'.format(target_url)
         print '(status: {}): {}'.format(r.status_code, r.text)
         return
-    with open(TILE_FILENAME_DIR + "/" + TILE_FILENAME_FORMAT.format(**parameters),"wb") as tilefile:
+    with open(tile_filename,"wb") as tilefile:
         tilefile.write(r.content)
-        print '--success with {x}x{y}'.format(**parameters)
+        print '--success with {z}:{x}x{y}'.format(**parameters)
 
 
-for x in xrange(655,675):
-    for y in xrange(1581,1591):
-        save_tile(x,y)
+areas = json.loads(open("areas.json","rb").read())
+
+for name, area in areas.iteritems():
+  print 'Getting tiles for %s ...' % name
+  for x in xrange(area["tileRange"]["Min"]["X"],area["tileRange"]["Max"]["X"] + 1):
+      for y in xrange(area["tileRange"]["Min"]["Y"],area["tileRange"]["Max"]["Y"] + 1):
+          save_tile(x,y, area["z"])
