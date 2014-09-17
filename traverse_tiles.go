@@ -12,7 +12,7 @@ const (
 	Frame   = 10
 )
 
-func traverseTiles(Area area) (image.Image, error) {
+func traverseTiles(Style style, Area area) (image.Image, error) {
 	m := image.NewRGBA(image.Rect(-Margins, -Margins, Area.TileRange.Dx()*TileSize+Margins, Area.TileRange.Dy()*TileSize+Margins))
 
 	whiteColor := color.RGBA{255, 255, 255, 255}
@@ -24,7 +24,7 @@ func traverseTiles(Area area) (image.Image, error) {
 	position := image.Rectangle{image.ZP, image.Point{X: TileSize, Y: TileSize}}
 	for y := Area.TileRange.Min.Y; y < Area.TileRange.Max.Y; y++ {
 		for x := Area.TileRange.Min.X; x < Area.TileRange.Max.X; x++ {
-			img, err := readTile(Area.Z, uint(x), uint(y))
+			img, err := readTile(Style.Mapid, Area.Z, uint(x), uint(y))
 			if err != nil {
 				fmt.Printf("no luck reading this tile: z:%v, %vx %v \n", Area.Z, x, y)
 				fmt.Println(err)

@@ -4,11 +4,12 @@ from keys import parameters
 import os.path
 
 URL_ENDPOINT = "https://a.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}@2x.png?access_token={access_token}"
-TILE_FILENAME_FORMAT = "tile{z}_{x}x{y}.png"
-TILE_FILENAME_DIR = "output"
+TILE_FILENAME_FORMAT = "tile{mapid}-{z}_{x}x{y}.png"
+TILE_FILENAME_DIR = "tiles"
 
 
-def save_tile(x,y, z):
+def save_tile(style, x,y, z):
+    parameters["mapid"] = style["mapid"]
     parameters["x"] = x
     parameters["y"] = y
     parameters["z"] = z
@@ -27,9 +28,11 @@ def save_tile(x,y, z):
 
 
 areas = json.loads(open("areas.json","rb").read())
+styles = json.loads(open("styles.json","rb").read())
 
 for name, area in areas.iteritems():
-  print 'Getting tiles for %s ...' % name
-  for x in xrange(area["tileRange"]["Min"]["X"],area["tileRange"]["Max"]["X"] + 1):
-      for y in xrange(area["tileRange"]["Min"]["Y"],area["tileRange"]["Max"]["Y"] + 1):
-          save_tile(x,y, area["z"])
+  for style_name, style in styles.iteritems():
+    print 'Getting tiles for %s in %s ...' % (name, style_name)
+    for x in xrange(area["tileRange"]["Min"]["X"],area["tileRange"]["Max"]["X"] + 1):
+        for y in xrange(area["tileRange"]["Min"]["Y"],area["tileRange"]["Max"]["Y"] + 1):
+            save_tile(style, x,y, area["z"])

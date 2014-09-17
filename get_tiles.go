@@ -8,12 +8,12 @@ import (
 )
 
 const (
-	tileDir      = "output"
-	TileFileName = "tile%v_%vx%v.png"
+	tileDir      = "tiles"
+	TileFileName = "tile%v-%v_%vx%v.png"
 )
 
-func readTile(z, x, y uint) (image.Image, error) {
-	file, err := os.Open(fmt.Sprintf(tileDir+"/"+TileFileName, z, x, y))
+func readTile(mapid string, z, x, y uint) (image.Image, error) {
+	file, err := os.Open(fmt.Sprintf(tileDir+"/"+TileFileName, mapid, z, x, y))
 	if err != nil {
 		return nil, err
 	}

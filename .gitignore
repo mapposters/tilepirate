@@ -4,6 +4,7 @@ __pycache__/
 keys.py
 result.png
 results/
+tiles/
 
 # C extensions
 *.so
