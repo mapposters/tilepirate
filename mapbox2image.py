@@ -3,7 +3,7 @@ import json
 from keys import parameters
 import os.path
 
-URL_ENDPOINT = "https://a.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}@2x.png?access_token={access_token}"
+URL_ENDPOINT = "https://api.mapbox.com/styles/v1/{username}/{mapid}/tiles/{z}/{x}/{y}@2x?access_token={access_token}"
 TILE_FILENAME_FORMAT = "tile{mapid}-{z}_{x}x{y}.png"
 TILE_FILENAME_DIR = "tiles"
 
@@ -19,8 +19,7 @@ def save_tile(style, x,y, z):
       return
     r = requests.get(URL_ENDPOINT.format(**parameters))
     if r.status_code != 200:
-        print 'Error accessing {} ...'.format(target_url)
-        print '(status: {}): {}'.format(r.status_code, r.text)
+        print '--error accesing {z}:{x}x{y}'.format(parameters)
         return
     with open(tile_filename,"wb") as tilefile:
         tilefile.write(r.content)
